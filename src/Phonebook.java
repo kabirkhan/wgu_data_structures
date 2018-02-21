@@ -1,17 +1,34 @@
 public class Phonebook {
-    private String storeType;
     private IDataStore<String, Person> store;
 
-    public String getStoreType() {
-        return storeType;
+    public Phonebook(DataStoreType storeType) {
+        switch (storeType) {
+            case HASH_TABLE:
+                this.store = new HashTable<String, Person>();
+                break;
+            case TREE:
+                this.store = new BST<String, Person>();
+                break;
+        }
     }
 
-    public Phonebook(String storeType) {
-        this.storeType = storeType;
-        if (this.storeType.equals("HASH_TABLE")) {
-            this.store = new HashTable<String, Person>();
-        } else if (this.storeType.equals("BST")) {
-            this.store = new BST();
-        }
+    public int size() {
+        return this.store.size();
+    }
+
+    public Person getContact(String firstName, String lastName) {
+        return this.store.get(getKey(firstName, lastName));
+    }
+
+    public boolean addContact(Person person) {
+        return this.store.add(getKey(person.getFirstName(), person.getLastName()), person);
+    }
+
+    public Person removeContact(String firstName, String lastName) {
+        return this.store.remove(getKey(firstName, lastName));
+    }
+
+    private String getKey(String firstName, String lastName) {
+        return firstName.trim().toUpperCase() + '_' + lastName.trim().toUpperCase();
     }
 }

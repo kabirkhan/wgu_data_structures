@@ -1,17 +1,12 @@
+import javax.xml.crypto.Data;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Main {
 
     public static void main(String[] args) {
-//        System.out.println("Hello World!");
-//        System.out.println("A".hashCode() + " " + "B".hashCode());
-//
-//        BST tree = new BST("Kabir");
-//
-//        tree.add("Cole");
-//        tree.add("Scott");
-//        tree.add("Kabir");
-//        tree.inOrderTraversal(tree.getRoot());
+        Phonebook hash_table = new Phonebook(DataStoreType.HASH_TABLE);
+        Phonebook tree = new Phonebook(DataStoreType.TREE);
 
         Person kabir = new Person(
                 "Kabir", "Khan", "kabirkhan1137@gmail.com", 2065558101
@@ -26,18 +21,25 @@ public class Main {
                 "Kevin", "Smith", "kevin@gmail.com", 2065558104
         );
 
-        HashTable<String, Person> map = new HashTable<>(1);
+        ArrayList<Person> people = new ArrayList<>();
+        people.add(kabir);
+        people.add(cole);
+        people.add(scott);
+        people.add(kevin);
 
 
-        Person val = map.getValue("Kabir");
+        runTests(hash_table, people);
+    }
 
-        System.out.println(val.getFullName());
+    private static void runTests(Phonebook phonebook, ArrayList<Person> people) {
+        for (int i = 0; i < people.size(); i++) {
+            phonebook.addContact(people.get(i));
+        }
+        Person scott = people.get(2);
 
-        Person removed = map.remove("Cole");
-        System.out.println(val.getFullName());
-
-        val = map.getValue("Cole");
-        System.out.println(val);
-
+        assert scott.equals(phonebook.getContact(scott.getFirstName(), scott.getLastName()));
+        phonebook.removeContact(scott.getFirstName(), scott.getLastName());
+        Person checkRemove = phonebook.getContact(scott.getFirstName(), scott.getLastName());
+        assert checkRemove == null;
     }
 }

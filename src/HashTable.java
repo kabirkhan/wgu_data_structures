@@ -1,3 +1,5 @@
+import jdk.nashorn.internal.objects.annotations.Optimistic;
+
 /**
  * Generic HashTable structure to hold an associative array.
  * Can be defined like HashTable<String, Object> = new HashTable<>()
@@ -6,7 +8,7 @@
  * @param <V>
  */
 
-public class HashTable<K, V> implements IDataStore<V> {
+public class HashTable<K, V> implements IDataStore<K, V> {
 
     private static final int DEFAULT_TABLE_SIZE = 13;
     private int size;
@@ -62,7 +64,30 @@ public class HashTable<K, V> implements IDataStore<V> {
         return key.hashCode() % table.length;
     }
 
-    V add(K key, V val) {
+
+    @Override()
+    public int size() {
+        return this.size;
+    }
+
+    @Override
+    public V get(K key) {
+        int index = getHashIndex(key);
+
+        if (table[index] != null) {
+            HashEntryNode runner = table[index];
+            while (runner != null) {
+                if (runner.getKey() == key) {
+                    return (V)runner.getValue();
+                }
+                runner = runner.getNextNode();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean add(K key, V val) {
         int index = getHashIndex(key);
         if (table[index] == null) {
             table[index] = new HashEntryNode<>(key, val);
@@ -72,19 +97,19 @@ public class HashTable<K, V> implements IDataStore<V> {
             while (runner.getNextNode() != null) {
                 runner = runner.getNextNode();
                 if (runner.getKey() == key) {
-                    V oldValue = (V)runner.getValue();
                     runner.setValue(val);
-                    return oldValue;
+                    return true;
                 }
             }
             HashEntryNode newNode = new HashEntryNode<>(key, val);
             runner.setNextNode(newNode);
             size++;
         }
-        return null;
+        return false;
     }
 
-    V remove(K key) {
+    @Override
+    public V remove(K key) {
         int index = getHashIndex(key);
         if (table[index] != null) {
             HashEntryNode runner = table[index];
@@ -104,21 +129,6 @@ public class HashTable<K, V> implements IDataStore<V> {
                     runner.setNextNode(runner.getNextNode().getNextNode());
                     size--;
                     return oldValue;
-                }
-                runner = runner.getNextNode();
-            }
-        }
-        return null;
-    }
-
-    V get(K key) {
-        int index = getHashIndex(key);
-
-        if (table[index] != null) {
-            HashEntryNode runner = table[index];
-            while (runner != null) {
-                if (runner.getKey() == key) {
-                    return (V)runner.getValue();
                 }
                 runner = runner.getNextNode();
             }

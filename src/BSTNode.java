@@ -1,33 +1,42 @@
-class BSTNode<V> {
-    private String data;
-    private BSTNode left;
-    private BSTNode right;
+class BSTNode<K, V> {
 
-    BSTNode(String data) {
+    private K key;
+    private V data;
+    private BSTNode<K, V> left;
+    private BSTNode<K, V> right;
+
+    public BSTNode(K key, V data, BSTNode<K, V> left, BSTNode<K, V> right) {
+        this.key = key;
         this.data = data;
+        this.setLeft(left);
+        this.setRight(right);
     }
 
-    String getData() {
+    public BSTNode(K key, V data) {
+        this(key, data, null, null);
+    }
+
+    public K getKey() {
+        return key;
+    }
+
+    public V getData() {
         return data;
     }
 
-    void setData(String data) {
-        this.data = data;
-    }
-
-    BSTNode getLeft() {
+    public BSTNode<K, V> getLeft() {
         return left;
     }
 
-    void setLeft(BSTNode left) {
+    public void setLeft(BSTNode<K, V> left) {
         this.left = left;
     }
 
-    BSTNode getRight() {
+    public BSTNode<K, V> getRight() {
         return right;
     }
 
-    void setRight(BSTNode right) {
+    public void setRight(BSTNode<K, V> right) {
         this.right = right;
     }
 }
