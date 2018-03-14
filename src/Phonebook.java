@@ -1,7 +1,9 @@
 public class Phonebook {
+    private DataStoreType storeType;
     private IDataStore<String, Person> store;
 
     public Phonebook(DataStoreType storeType) {
+        this.storeType = storeType;
         switch (storeType) {
             case HASH_TABLE:
                 this.store = new HashTable<String, Person>();
@@ -10,6 +12,10 @@ public class Phonebook {
                 this.store = new BST<String, Person>();
                 break;
         }
+    }
+
+    public DataStoreType getStoreType() {
+        return storeType;
     }
 
     public int size() {

@@ -61,7 +61,11 @@ public class HashTable<K, V> implements IDataStore<K, V> {
     }
 
     private int getHashIndex(K key) {
-        return key.hashCode() % table.length;
+        int hashIndex = key.hashCode() % table.length;
+        if (hashIndex < 0) {
+            hashIndex += table.length;
+        }
+        return hashIndex;
     }
 
 

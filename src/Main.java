@@ -29,17 +29,23 @@ public class Main {
 
 
         runTests(hash_table, people);
+        runTests(tree, people);
     }
 
     private static void runTests(Phonebook phonebook, ArrayList<Person> people) {
+        System.out.println("Adding contacts to phone book with store type: " + phonebook.getStoreType());
         for (int i = 0; i < people.size(); i++) {
             phonebook.addContact(people.get(i));
         }
+        System.out.println("Done.");
+        System.out.println("Getting person Scott from phone book with store type: " + phonebook.getStoreType());
         Person scott = people.get(2);
-
+        System.out.println("Done.");
         assert scott.equals(phonebook.getContact(scott.getFirstName(), scott.getLastName()));
+        System.out.println("Removing Scott from phone book with store: " + phonebook.getStoreType());
         phonebook.removeContact(scott.getFirstName(), scott.getLastName());
         Person checkRemove = phonebook.getContact(scott.getFirstName(), scott.getLastName());
         assert checkRemove == null;
+        System.out.println("Done.");
     }
 }

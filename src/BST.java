@@ -29,7 +29,7 @@ public class BST<K, V> implements IDataStore<K, V> {
             return null;
         }
 
-        while (current.getKey() != key) {
+        while (current != null && current.getKey() != key) {
             if (key.hashCode() < current.getKey().hashCode()) {
                 current = current.getLeft();
             } else if (key.hashCode() > current.getKey().hashCode()) {
@@ -74,22 +74,45 @@ public class BST<K, V> implements IDataStore<K, V> {
 
     @Override
     public V remove(K key) {
-        BSTNode<K, V> foundNode = this.doSearch(key);
+        return this._remove(key, this.getRoot());
+    }
 
-        if (foundNode == null) {
+    private V _remove(K key, BSTNode current) {
+        if (current == null) {
             return null;
         }
-
-        System.out.println("Working on it");
+        if (key.hashCode() < current.getKey().hashCode()) {
+            _remove(key, current.getLeft());
+        } else if (key.hashCode() > current.getKey().hashCode()) {
+            _remove(key, current.getRight());
+        } else {
+            // Remove the current node
+            if (current.getLeft() != null && current.getRight() != null) {
+                BSTNode<K, V> maxLeft = findMax(current.getLeft());
+                current.setKey(maxLeft.getKey());
+                _remove(maxLeft.getKey(), current.getLeft());
+            } else if (current.getLeft() != null) {
+                BSTNode<K, V> trash = current;
+                current = current.getLeft();
+                current = null;
+                return trash.getData();
+            } else if (current.getRight() != null) {
+                BSTNode<K, V> trash = current;
+                current = current.getRight();
+                current = null;
+                return trash.getData();
+            } else {
+                current = null;
+            }
+        }
         return null;
     }
 
-//    void inOrderTraversal(BSTNode current) {
-//        if (current == null) {
-//            return;
-//        }
-//        inOrderTraversal(current.getLeft());
-//        System.out.print(current.getKey());
-//        inOrderTraversal(current.getRight());
-//    }
+    private BSTNode<K, V> findMax(BSTNode<K, V> from) {
+        if (from == null) {
+            return from;
+        } else {
+            return findMax(from.getRight());
+        }
+    }
 }

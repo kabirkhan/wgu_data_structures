@@ -20,6 +20,10 @@ class BSTNode<K, V> {
         return key;
     }
 
+    public void setKey(K key) {
+        this.key = key;
+    }
+
     public V getData() {
         return data;
     }
